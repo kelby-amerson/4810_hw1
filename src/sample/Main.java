@@ -40,15 +40,14 @@ public class Main extends Application {
             //random number generator
             int x0, x1, y0, y1;
             int deltax, deltay;
-            do {
-                Random randomNumGen = new Random();
-                x0 = randomNumGen.nextInt(300);
-                x1 = randomNumGen.nextInt(300);
-                y0 = randomNumGen.nextInt(300);
-                y1 = randomNumGen.nextInt(300);
-                deltax = x1 - x0;
-                deltay = y1 - y0;
-            } while (!(deltax > deltay && x1 > x0 && y1 > y0));
+
+            Random randomNumGen = new Random();
+            x0 = randomNumGen.nextInt(300);
+            x1 = randomNumGen.nextInt(300);
+            y0 = randomNumGen.nextInt(300);
+            y1 = randomNumGen.nextInt(300);
+
+
 
             pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
 
@@ -130,31 +129,12 @@ public class Main extends Application {
 
 
     public void BresenhamAlg(int x0, int y0, int x1, int y1){
-        int deltax = x1-x0;
+        /*int deltax = x1-x0;
         int deltay = y1-y0;
         int tempx = x0;
         int tempy = y0;
 
-        int e = 2 * deltay - deltax;//change from deltax-deltay
-        int increment1 = 2 * deltax;
-        int increment2 = 2 * (deltax - deltay);
-
-
-        if(deltax>= deltay && deltax !=0 && deltay !=0){
-            while(tempx != x1) {
-                pixelWriter.setColor(tempx, tempy, Color.DARKGRAY);
-                if(e<0){
-                    e += increment1;
-                }else{
-                    tempy++;
-                    e +=increment2;
-                }
-            }
-        }else if(deltay>deltax && deltax !=0 && deltay !=0){
-            while
-        }
-
-        /*if(deltax>deltay && deltax !=0 || deltay != 0){
+        if(deltax>deltay && deltax !=0 || deltay != 0){
 
             int e = 2 * deltax - deltay;
             int increment1 = 2 * deltax;
@@ -195,9 +175,60 @@ public class Main extends Application {
 
 
             //return;
+        }*/
+
+        int deltax = x0-x1;
+        int deltay = y0-y1;
+        int fraction, xstep, ystep;
+        fraction = -1;
+
+        if(deltay<0){
+            deltay = -deltay;
+            ystep = -1;
         }
+        else{
+            ystep = 1;
+        }
+        if(deltax<0){
+            deltax = -deltax;
+            xstep = -1;
+        }
+        else{
+            xstep = 1;
+        }
+
+        deltay <<= 1;
+        deltax <<= 1;
+        pixelWriter.setColor(x0,y0, Color.DARKGRAY);
+
+        if(deltax>deltay){
+            fraction = deltay - (deltax >> 1);
+        }
+        while (x0 != x1){
+            if(fraction >=0){
+                y0 += ystep;
+                fraction -= deltax;
+                x0 += xstep;
+                fraction += deltay;
+                pixelWriter.setColor(x0, y0, Color.DARKGRAY);
+            }
+            else{
+                fraction = deltax - (deltay >>1);
+                while (y0 != y1){
+                    if (fraction >= 0){
+                        x0 += xstep;
+                        fraction -= deltay;
+                    }
+                    y0 += ystep;
+                    fraction += deltax;
+                    pixelWriter.setColor(x0,y0, Color.DARKGRAY);
+                }
+            }
+
+        }
+
     }
-    */
+
 
 
 
