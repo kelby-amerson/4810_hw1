@@ -1,17 +1,13 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.*;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
+import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -47,7 +43,7 @@ public class Main extends Application {
             y0 = randomNumGen.nextInt(300);
             y1 = randomNumGen.nextInt(300);
 
-
+            //206, 241 to 100, 285
 
             pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
 
@@ -62,7 +58,7 @@ public class Main extends Application {
 
             //writes and times the Bresenham's Algorithm Method
             startTime = System.nanoTime();
-            BresenhamAlg(x0, y0, x1, y1);
+            BresenhamAlg(206, 241, 100, 285);
             endTime = System.nanoTime();
             duration = endTime - startTime;
             System.out.println("Bresenham Number "+i+": "+duration);
@@ -177,10 +173,10 @@ public class Main extends Application {
             //return;
         }*/
 
-        int deltax = x0-x1;
-        int deltay = y0-y1;
+        int deltax = x1-x0;
+        int deltay = y1-y0;
         int fraction, xstep, ystep;
-        fraction = -1;
+        //fraction = -1;
 
         if(deltay<0){
             deltay = -deltay;
@@ -203,6 +199,9 @@ public class Main extends Application {
 
         if(deltax>deltay){
             fraction = deltay - (deltax >> 1);
+        }
+        else{
+            fraction = deltax >>1;
         }
         while (x0 != x1){
             if(fraction >=0){
