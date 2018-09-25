@@ -38,10 +38,10 @@ public class Main extends Application {
             int deltax, deltay;
 
             Random randomNumGen = new Random();
-            x0 = randomNumGen.nextInt(300);
-            x1 = randomNumGen.nextInt(300);
-            y0 = randomNumGen.nextInt(300);
-            y1 = randomNumGen.nextInt(300);
+            x0 = randomNumGen.nextInt(500);
+            x1 = randomNumGen.nextInt(500);
+            y0 = randomNumGen.nextInt(500);
+            y1 = randomNumGen.nextInt(500);
 
             //206, 241 to 100, 285
 
@@ -49,7 +49,7 @@ public class Main extends Application {
 
             //writes and times the BasicAlgorithm Method
             long startTime = System.nanoTime();
-            BasicAlgorithm(x0, y0, x1, y1);
+            //BasicAlgorithm(x0, y0, x1, y1);
             long endTime = System.nanoTime();
             long duration = endTime - startTime;
             System.out.println("Basic Number " +i+ ": "+duration);
@@ -126,94 +126,58 @@ public class Main extends Application {
 
     public void BresenhamAlg(int x0, int y0, int x1, int y1){
         //straight from https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
-        int deltax = x1-x0;
-        int deltay = y1-y0;
+        //and https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Java
+        int deltax = Math.abs(x1-x0);
+        int deltay = Math.abs(y1-y0);
         int tempx = x0;
         int tempy = y0;
-        int xincrement, yincrement;
-        int e;
+        int xincrement = x0<x1 ? 1 : -1;
+        int yincrement = y0<y1 ? 1 : -1;
+        int e=0;
+        int deltax2 = 2*deltax;
+        int deltay2 = 2*deltay;
 
-        if(Math.abs(deltay)<Math.abs(deltax)){
-            if(x0>x1){
-                //plotlinelow(x1,y1,x0,y0
-                deltax = x1-x0;
-                deltay = y1-y0;
-                yincrement = 1;
-                if(deltay<0){
-                    yincrement = -1;
-                    deltay = -deltay;
-                }
-                e = 2*deltay-deltax;
-                for(int i=x1;i<x0;i++){
-                    pixelWriter.setColor(i,tempy, Color.BLUE);
-                    if(e >0){
-                        tempy = tempy+yincrement;
-                        e = e-2*deltax;
-                    }
-                    e = e+2*deltay;
-                }
+        //vertical line
+        if(deltax==0){
+            for(int i=y0;i<y1;i++){
+                pixelWriter.setColor(tempx,i,Color.BLUE);
             }
-            else{
-                //plotlinelow(x0,y0,x1,y1
-                deltax = x0-x1;
-                deltay = y0-y1;
-                yincrement = 1;
-                if(deltay<0){
-                    yincrement = -1;
-                    deltay = -deltay;
+            return;
+        }
+        //horizontal line
+        if (deltay == 0) {
+            for (int i=x0;i<x1;i++){
+                pixelWriter.setColor(i,tempy,Color.BLUE);
+            }
+            return;
+        }
+
+        if(deltax >= deltay) {
+            while(true) {
+                pixelWriter.setColor(tempx, tempy, Color.BLUE);
+                if(tempx==x1)
+                    break;
+                tempx += xincrement;
+                e += deltay2;
+                if(e > deltax) {
+                    tempy += yincrement;
+                    e -= deltax2;
                 }
-                e = 2*deltay-deltax;
-                for(int i=x0;i<x1;i++){
-                    pixelWriter.setColor(i,tempy, Color.BLUE);
-                    if(e >0){
-                        tempy = tempy+yincrement;
-                        e = e-2*deltax;
-                    }
-                    e = e+2*deltay;
+
+            }
+        }else {
+            while(true) {
+                pixelWriter.setColor(tempx,tempy, Color.BLUE);
+                if(tempy == y1)
+                    break;
+                tempy += yincrement;
+                e += deltax2;
+                if(e> deltay) {
+                    tempx += xincrement;
+                    e -= deltay2;
                 }
             }
         }
-        else{
-            if(y0>y1){
-                //plotlinehigh(x1,y1,x0,y0
-                deltax = x1-x0;
-                deltay = y1-y0;
-                xincrement = 1;
-                if(deltax<0){
-                    xincrement = -1;
-                    deltax = -deltax;
-                }
-                e = 2*deltax-deltay;
-                for(int i=y1;i<y0;i++){
-                    pixelWriter.setColor(tempx,i, Color.BLUE);
-                    if(e >0){
-                        tempx = tempx+xincrement;
-                        e = e-2*deltay;
-                    }
-                    e = e+2*deltax;
-                }
-            }
-            else{
-                //plotlinehigh(x0,y0,x1,y1
-                deltax = x0-x1;
-                deltay = y0-y1;
-                xincrement = 1;
-                if(deltax<0){
-                    xincrement = -1;
-                    deltax = -deltax;
-                }
-                e = 2*deltax-deltay;
-                for(int i=y0;i<y1;i++){
-                    pixelWriter.setColor(tempx,i, Color.BLUE);
-                    if(e >0){
-                        tempx = tempx+xincrement;
-                        e = e-2*deltay;
-                    }
-                    e = e+2*deltax;
-                }
-            }
-        }
-
 
     }
 
